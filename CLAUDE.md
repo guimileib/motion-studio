@@ -14,6 +14,11 @@ roteiro persuasivo → busca de mídia → narração (ElevenLabs) + legendas �
 | `estilos-motion` | Escolher o estilo visual de cada vídeo (8 estilos) e conduzir storyboard → build → folha de contatos → render | `projetos/<slug>/estilo/escolha.html`, `roteiro.json → estilo` |
 | `transicoes-motion` | Escolher e implementar transições entre cenas | componentes em `remotion/src/transicoes/`, passos de CapCut, padrões para o Motion do Claude |
 
+Skills de terceiros (MIT, licença dentro de cada pasta; detalhes e dependências no `README.md`):
+`bang-motion` (motion HTML + GSAP), `vox-explainer` e `vox-director` (explainer estilo Vox via Atlas Cloud),
+`huashu-art-motion` (animação artística e explainer) e `claude-drawing` (pintura procedural em código).
+Elas não fazem parte do pipeline padrão: use quando o pedido combinar com elas, e ainda assim pergunte o estilo antes de montar.
+
 ## O pipeline padrão
 
 0. **Estilo (obrigatório)** — quando o usuário passar um `.json` de roteiro (um vídeo ou uma série), **antes de montar cada projeto** abra a página de estilos e pergunte qual estilo usar e se a paleta é do estilo ou da marca: `python .claude/skills/estilos-motion/scripts/abrir_estilos.py --roteiro projetos/<slug>/roteiro.json` (ou `--serie <arquivo> --video <id>`). Numa série, pergunte vídeo a vídeo. Depois mostre o storyboard (mapa de batidas + 4 quadros) e espere aprovação.

@@ -16,6 +16,21 @@ Ficam em `.claude/skills/` e o Claude Code as carrega sozinho quando o pedido co
 | `estilos-motion` | 8 estilos de motion (flat da marca, linha contínua, bola única, ASCII, pixel dither, risografia, códice, tinta na água), página de escolha por projeto e fluxo storyboard → build → folha de contatos | `scripts/abrir_estilos.py`, `pagina/estilos.html` |
 | `transicoes-motion` | Catálogo de 19 transições com duração, easing e som; implementação no Remotion, CapCut e Motion do Claude | `remotion/src/transicoes/`, `templates/claude-motion/transicoes.js`, `scripts/montar_remotion.py` |
 
+### Skills de terceiros (MIT)
+
+Incorporadas como cópia, com a `LICENSE` original de cada uma dentro da pasta. Ficaram de fora só os
+vídeos e GIFs de vitrine; scripts, referências, fontes e imagens de referência estão completos.
+
+| Skill | Origem | Faz | Precisa de |
+|---|---|---|---|
+| `bang-motion` | [bangtutorial/bang-motion](https://github.com/bangtutorial/bang-motion) | Motion cinematográfico no navegador (HTML + CSS + GSAP): promo, opener, kinetic type, explainer 16:9 e 9:16; texto em indonésio | Node, Python, `ffmpeg` |
+| `vox-explainer` | [CK42BB/vox-explainer-skill](https://github.com/CK42BB/vox-explainer-skill) | Pipeline de explainer estilo Vox a partir de um tema (roteiro, keyframes, animação, voz) | `ATLASCLOUD_API_KEY`, `ffmpeg` |
+| `vox-director` | [Alisa0808/vox-director](https://github.com/Alisa0808/vox-director) | Explainer/anúncio estilo Vox em colagem de papel, de ponta a ponta | `ATLASCLOUD_API_KEY`, Python, `ffmpeg` |
+| `huashu-art-motion` | [alchaincyf/huashu-art-motion](https://github.com/alchaincyf/huashu-art-motion) | Animação artística e de explicação: 36 estilos, 9 gramáticas de explainer, motor de render; texto em chinês | `uv`, `ffmpeg`, Playwright Chromium (`uv run --with playwright playwright install chromium`); TTS opcional `VOLC_SPEECH_TOKEN` |
+| `claude-drawing` | [cloveric/claude-drawing-skill](https://github.com/cloveric/claude-drawing-skill) | Pintura procedural em código, sem modelo de imagem, 83 estilos (aquarela, nanquim, óleo…); texto em chinês | Python com `numpy` e `Pillow` (`pip install -r .claude/skills/claude-drawing/requirements.txt`) |
+
+Para atualizar uma delas, baixe de novo o repositório de origem e substitua a pasta.
+
 ## Instalação
 
 ```bash
@@ -35,6 +50,8 @@ Chaves (todas no `.env`, que não vai para o git):
 | `PEXELS_API_KEY` | pexels.com/api |
 | `PIXABAY_API_KEY` | pixabay.com/api/docs (logado) |
 | `UNSPLASH_ACCESS_KEY` | unsplash.com/developers → New Application |
+| `ATLASCLOUD_API_KEY` | atlascloud.ai (só `vox-explainer` e `vox-director`) |
+| `VOLC_SPEECH_APPID`, `VOLC_SPEECH_TOKEN` | opcional, TTS da Volcengine para `huashu-art-motion` |
 
 ## Uso no Claude Code
 
@@ -92,6 +109,7 @@ dos scripts da própria pasta.
   lucrativos; acima disso precisa de licença de empresa (remotion.pro/license).
 - Mídia de banco: veja `.claude/skills/busca-midia/references/licencas.md`. Os créditos de cada projeto
   ficam em `projetos/<slug>/CREDITOS.md`.
+- Skills de terceiros: MIT, cada uma com a sua `LICENSE` na própria pasta.
 - ElevenLabs: o uso comercial da voz depende do seu plano.
 - VoiceStudio: o app é AGPL-3.0 e cada motor tem a sua licença. O padrão (OmniVoice) é CC-BY-NC, só
   uso não comercial; para anúncio use `voxcpm2` ou `moss-tts-nano` (Apache-2.0). Clone só voz com
