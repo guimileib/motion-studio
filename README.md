@@ -13,7 +13,7 @@ Ficam em `.claude/skills/` e o Claude Code as carrega sozinho quando o pedido co
 | `roteiro-persuasivo` | Roteiro com níveis de consciência, PAS/AIDA/BAB/PASTOR, gatilhos de Cialdini, quebra de objeção e cronometragem | gera `roteiro.md` + `roteiro.json` (esquema em `templates/`) |
 | `busca-midia` | Fotos e vídeos de Pexels, Pixabay, Unsplash e web aberta, alinhados ao corte, com licença e créditos | `scripts/buscar_midia.py` |
 | `legendas-tts` | Narração ElevenLabs com timestamps ou local no VoiceStudio, SRT, legenda animada estilo Reels, transcrição (Scribe) | `scripts/tts_elevenlabs.py`, `scripts/tts_voicestudio.py`, `scripts/stt_elevenlabs.py`, `scripts/legendas_lib.py` |
-| `estilos-motion` | 8 estilos de motion (flat da marca, linha contínua, bola única, ASCII, pixel dither, risografia, códice, tinta na água), página de escolha por projeto e fluxo storyboard → build → folha de contatos | `scripts/abrir_estilos.py`, `pagina/estilos.html` |
+| `estilos-motion` | Etapa 0 de todo vídeo: página animada com os estilos da casa (flat da marca, linha contínua, bola única, risografia, códice, tinta na água), os estilos das skills de terceiros e a opção "criar do zero"; numa só pergunta escolhe o estilo, a paleta e se os movimentos da `motion-prompt` ficam com o Claude ou saem da galeria; depois storyboard → build → folha de contatos → render | `scripts/abrir_estilos.py`, `pagina/estilos.html` |
 | `transicoes-motion` | Catálogo de 19 transições com duração, easing e som; implementação no Remotion, CapCut e Motion do Claude | `remotion/src/transicoes/`, `templates/claude-motion/transicoes.js`, `scripts/montar_remotion.py` |
 
 ### Skills de terceiros (MIT)

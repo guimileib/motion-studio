@@ -45,6 +45,27 @@
         }
       }
     },
+    "estilo": {
+      "type": "object",
+      "description": "Escolhido na etapa 0 (skill estilos-motion), antes de montar o vídeo",
+      "properties": {
+        "id": { "type": "string", "description": "Estilo da casa (00-flat-marca…07-tinta-na-agua), skill de estilo (s-bang-motion, s-vox-director, s-vox-explainer, s-huashu-art-motion, s-claude-drawing) ou 99-do-zero" },
+        "origem": { "enum": ["casa", "skill", "do-zero"] },
+        "skill": { "type": "string", "description": "Nome da skill quando origem = skill" },
+        "variante": { "type": "string", "description": "Sub-estilo da skill (ex.: um dos 36 do huashu ou dos 83 do claude-drawing)" },
+        "paleta": { "enum": ["estilo", "marca"] },
+        "spec": { "type": "string", "description": "Quando do-zero: caminho do estilo criado (projetos/<slug>/estilo/estilo.md)" },
+        "motions": {
+          "type": "object",
+          "description": "Movimentos da biblioteca motion-prompt",
+          "properties": {
+            "modo": { "enum": ["claude", "galeria", "nenhum"] },
+            "ids": { "type": "array", "items": { "type": "string", "pattern": "^#?[0-9]{3}$" } },
+            "nota": { "type": "string" }
+          }
+        }
+      }
+    },
     "legenda_estilo": { "enum": ["reels", "padrao"], "default": "reels" },
     "cenas": {
       "type": "array",

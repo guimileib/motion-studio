@@ -28,6 +28,10 @@
   .cores { display:flex; gap:6px; }
   .cores i { width:20px; height:20px; border-radius:6px; border:1px solid rgba(255,255,255,.2); }
   .bom { font-size:13px; color:#cfe9f3; }
+  h2.secao { max-width:1240px; margin:18px auto 0; padding:0 24px; font-size:19px; }
+  h2.secao small { color:var(--suave); font-weight:400; font-size:13.5px; margin-left:8px; }
+  .skill { color:var(--acento); font-size:12.5px; font-family:ui-monospace,Consolas,monospace; }
+  @media (max-width:600px){ h2.secao{ padding:0 16px; } }
   footer { position:sticky; bottom:0; background:rgba(15,18,32,.95); border-top:1px solid var(--linha); padding:14px 24px; text-align:center; font-size:16px; }
   footer b { color:var(--acento); }
   @media (max-width:600px){ main{ padding:12px 16px 40px; } header{ padding:20px 16px 4px; } }
@@ -36,10 +40,15 @@
 <body>
 <header>
   <h1>Qual estilo de motion para este vídeo?</h1>
-  <p class="sub">Toque num estilo para ver o nome; depois responda no chat do Claude Code.</p>
+  <p class="sub">Toque num estilo para ver o nome; depois responda no chat do Claude Code. Na mesma pergunta você diz se os movimentos (biblioteca motion-prompt) ficam por conta do Claude ou se quer abrir a galeria e escolher.</p>
   <div class="proj" id="proj"></div>
 </header>
-<main id="grade"></main>
+<h2 class="secao">Estilos da casa</h2>
+<main id="grade-casa"></main>
+<h2 class="secao">Estilos das skills <small>cada uma tem sub-estilos; o Claude pergunta qual depois</small></h2>
+<main id="grade-skill"></main>
+<h2 class="secao">Criar do zero</h2>
+<main id="grade-zero"></main>
 <footer id="rodape">Nenhum estilo selecionado.</footer>
 
 <script>
@@ -52,6 +61,12 @@ const ESTILOS = [
   {id:"05-riso-stop-motion", n:"05", nome:"Risografia stop motion", mov:"Stop motion em três, com tremor", som:"Piano de brinquedo, papel", dif:"Média", cores:["#F3EFE6","#FF48B0","#00838A"], bom:"Pequeno negócio, cotidiano, tom humano."},
   {id:"06-codice", n:"06", nome:"Códice renascentista", mov:"Ritmo de mão, um voo rápido", som:"Alaúde, pena arranhando", dif:"Difícil", cores:["#E9D9B5","#5A3A1E","#A4452C"], bom:"Estudos, história, autoridade."},
   {id:"07-tinta-na-agua", n:"07", nome:"Tinta na água", mov:"Câmera lenta, orgânico", som:"Piano ambiente, sem bateria", dif:"Difícil", cores:["#FAFAFA","#1B1F6B","#C2185B"], bom:"Memória, percepção, emoção."},
+  {id:"s-bang-motion", grupo:"skill", skill:"bang-motion", n:"S1", nome:"Cinema no navegador", mov:"Máscaras, varreduras de luz, tipografia cinética (GSAP)", som:"Impactos e whooshes sincronizados", dif:"Média", cores:["#0B0B0F","#F5F2EA","#FFB000"], bom:"Promo, opener, lançamento, explainer com cara de trailer. HTML → MP4."},
+  {id:"s-vox-director", grupo:"skill", skill:"vox-director", n:"S2", nome:"Colagem de papel (Vox)", mov:"Recortes em stop motion, fita, papel rasgado", som:"Trilha documental, papel", dif:"Média", cores:["#E8DCC4","#1A1A1A","#E2412F","#2C6E8F"], bom:"Explainer e anúncio em colagem; aceita foto de pessoa ou produto. Imagem e movimento por IA (Atlas Cloud, pago)."},
+  {id:"s-vox-explainer", grupo:"skill", skill:"vox-explainer", n:"S3", nome:"Ensaio documental (Vox)", mov:"Ken Burns em arquivo, marca-texto, mapas", som:"Trilha de documentário", dif:"Média", cores:["#F2EFE8","#FFE14D","#222222","#C0392B"], bom:"Tema histórico ou de notícia contado como mini documentário. IA via Atlas Cloud (pago)."},
+  {id:"s-huashu-art-motion", grupo:"skill", skill:"huashu-art-motion", n:"S4", nome:"Arte em movimento", mov:"Rolo longo, pinceladas, 9 gramáticas de explainer", som:"Conforme o sub-estilo", dif:"Difícil", cores:["#F1EBDD","#2B2B2B","#B5432C","#6F8A6B"], bom:"36 estilos artísticos (nanquim, pintura, pixel…) e explainers estilo aula/keynote. Motor próprio com Playwright."},
+  {id:"s-claude-drawing", grupo:"skill", skill:"claude-drawing", n:"S5", nome:"Pintura em código", mov:"A imagem se pinta pincelada a pincelada", som:"Piano, pincel", dif:"Média", cores:["#FBF7EE","#3A6EA5","#E07A5F","#81B29A"], bom:"83 técnicas (aquarela, óleo, xilogravura, giz…) sem gerador de imagem. Ótimo para quadros e fundos."},
+  {id:"99-do-zero", grupo:"zero", n:"99", nome:"Criar um estilo novo", mov:"Você descreve, o Claude propõe 2–3 direções", som:"Definido junto", dif:"—", cores:["#888888"], bom:"Quando nada aqui serve. Vira um estilo salvo no projeto (estilo.md) e pode entrar no catálogo."},
 ];
 
 // ---------------------------------------------------------------- utilitários
@@ -172,6 +187,74 @@ const DESENHOS = {
     c.globalCompositeOperation="source-over";
     c.strokeStyle="rgba(27,31,107,.15)"; c.beginPath(); c.moveTo(0,52); c.lineTo(W,52); c.stroke();
   },
+
+  "s-bang-motion"(c, t){
+    c.fillStyle="#0B0B0F"; c.fillRect(0,0,W,H);
+    const lx = -120 + ((t*0.9)%1.4)/1.4*(W+240); const g=c.createLinearGradient(lx-60,0,lx+60,0);
+    g.addColorStop(0,"rgba(255,176,0,0)"); g.addColorStop(.5,"rgba(255,176,0,.22)"); g.addColorStop(1,"rgba(255,176,0,0)"); c.fillStyle=g; c.fillRect(0,0,W,H);
+    [["O",0.2],["FUTURO",0.6],["COMEÇA",1.1],["AGORA",1.6]].forEach(([p,ini],i)=>{ const e=ease((t-ini)/0.45); if(e<=0) return; const y=150+i*58;
+      c.save(); c.beginPath(); c.rect(0,y-44,W,52); c.clip(); c.fillStyle=i===3?"#FFB000":"#F5F2EA";
+      c.font="900 42px Impact, 'Arial Black', sans-serif"; c.textAlign="center"; c.fillText(p, W/2, y+(1-e)*52); c.restore(); });
+    const b=ease((t-2.3)/0.5); c.fillStyle="#FFB000"; c.fillRect(W/2-80*b, 400, 160*b, 3);
+    c.fillStyle="rgba(0,0,0,.5)"; c.fillRect(0,0,W,34); c.fillRect(0,H-34,W,34);
+  },
+  "s-vox-director"(c, t){
+    c.fillStyle="#E8DCC4"; c.fillRect(0,0,W,H);
+    for(let i=0;i<300;i++){ c.fillStyle=`rgba(90,70,40,${0.04+rnd(i)*0.05})`; c.fillRect(rnd(i+11)*W, rnd(i+12)*H, 2, 2); }
+    const tq=Math.floor(t*8)/8, j=k=>(rnd(Math.floor(t*8)+k)-.5)*2.5;
+    const papel=(x,y,w,h,cor,rot,ini,k)=>{ if(tq<ini) return; c.save(); c.translate(x+j(k),y+j(k+1)); c.rotate(rot);
+      c.fillStyle="rgba(0,0,0,.18)"; c.fillRect(-w/2+4,-h/2+5,w,h); c.fillStyle=cor; c.beginPath(); c.moveTo(-w/2,-h/2);
+      for(let i=0;i<=10;i++) c.lineTo(-w/2+i*w/10, -h/2+(rnd(k*7+i)-.5)*6);
+      for(let i=10;i>=0;i--) c.lineTo(-w/2+i*w/10, h/2+(rnd(k*9+i)-.5)*6); c.closePath(); c.fill(); c.restore(); };
+    papel(W/2,170,200,150,"#2C6E8F",-0.05,0.2,1);
+    if(tq>=0.2){ c.fillStyle="rgba(232,220,196,.45)"; for(let y=110;y<240;y+=7) for(let x=60;x<210;x+=7){ c.beginPath(); c.arc(x+(y%14?3:0),y,1.6,0,7); c.fill(); } }
+    papel(W/2+30,300,150,70,"#E2412F",0.08,0.9,3);
+    papel(W/2-40,360,170,46,"#1A1A1A",-0.04,1.6,5);
+    if(tq>=1.6){ c.fillStyle="#F2EAD8"; c.font="bold 22px Georgia, serif"; c.textAlign="center"; c.fillText("POR QUÊ?", W/2-40+j(5), 368); }
+    if(tq>=2.2){ c.save(); c.translate(W/2+88,108); c.rotate(.6); c.fillStyle="rgba(240,230,170,.75)"; c.fillRect(-26,-9,52,18); c.restore(); }
+  },
+  "s-vox-explainer"(c, t){
+    c.fillStyle="#F2EFE8"; c.fillRect(0,0,W,H);
+    const z=1+t*0.05; c.save(); c.translate(W/2,190); c.scale(z,z); c.translate(-W/2,-190);
+    c.fillStyle="#D9D3C7"; c.fillRect(30,90,W-60,200); c.fillStyle="#BDB5A6";
+    c.beginPath(); c.moveTo(30,250); c.bezierCurveTo(90,200,140,240,180,180); c.bezierCurveTo(210,150,230,190,240,160); c.lineTo(240,290); c.lineTo(30,290); c.fill();
+    const r=ease((t-0.8)/1.2); c.strokeStyle="#222"; c.lineWidth=1; c.setLineDash([3,3]); c.beginPath(); c.moveTo(60,240); c.lineTo(60+150*r,240-80*r); c.stroke(); c.setLineDash([]);
+    c.fillStyle="#C0392B"; const e=ease((t-2)/0.3); c.beginPath(); c.arc(210,160,6*e,0,7); c.fill(); c.restore();
+    c.fillStyle="#222"; c.font="700 20px Georgia, serif"; c.textAlign="left"; c.fillText("Em 1933,", 30, 345);
+    const m=ease((t-1.2)/0.6); c.fillStyle="rgba(255,225,77,.85)"; c.fillRect(28,356,130*m,26);
+    c.fillStyle="#222"; c.fillText("tudo mudou.", 30, 376);
+    c.fillStyle="#777"; c.font="11px system-ui"; c.fillText("FONTE: ARQUIVO PÚBLICO", 30, 420);
+  },
+  "s-huashu-art-motion"(c, t){
+    c.fillStyle="#F1EBDD"; c.fillRect(0,0,W,H);
+    [["rgba(111,138,107,.35)",0.15,130,40],["rgba(60,60,60,.45)",0.35,200,60],["rgba(43,43,43,.85)",0.7,270,80]].forEach(([cor,vel,base,amp],k)=>{
+      c.fillStyle=cor; c.beginPath(); c.moveTo(0,H);
+      for(let x=0;x<=W;x+=4){ const u=x+t*vel*120; c.lineTo(x, base+Math.sin(u*0.02+k)*amp*0.5+Math.sin(u*0.051+k*3)*amp*0.35-Math.abs(Math.sin(u*0.008+k))*amp); }
+      c.lineTo(W,H); c.fill(); });
+    c.fillStyle="#B5432C"; c.beginPath(); c.arc(200,90,22,0,7); c.fill();
+    c.fillStyle="rgba(241,235,221,.92)"; c.fillRect(0,330,W,H-330);
+    c.strokeStyle="#2B2B2B"; c.lineWidth=2; const bx=30+((t*40)%200); c.beginPath(); c.moveTo(bx,372); c.lineTo(bx+5,356); c.lineTo(bx+12,372); c.stroke();
+    c.fillStyle="#B5432C"; c.fillRect(W-46,360,22,30);
+  },
+  "s-claude-drawing"(c, t){
+    c.fillStyle="#FBF7EE"; c.fillRect(0,0,W,H);
+    const n=Math.floor(ease(t/3.6)*160); c.globalCompositeOperation="multiply";
+    for(let i=0;i<n;i++){ const k=i<50?0:i<110?1:2; c.strokeStyle=["rgba(58,110,165,.18)","rgba(129,178,154,.2)","rgba(224,122,95,.22)"][k];
+      const x0=[0,0,W*0.55][k]+rnd(i)*[W,W,W*0.35][k], y0=[30,250,170][k]+rnd(i+1)*[200,170,90][k];
+      c.lineWidth=6+rnd(i+2)*10; c.lineCap="round"; c.beginPath(); c.moveTo(x0,y0);
+      c.quadraticCurveTo(x0+20+rnd(i+3)*30, y0-10+rnd(i+4)*20, x0+40+rnd(i+5)*40, y0+rnd(i+6)*8); c.stroke(); }
+    c.globalCompositeOperation="source-over";
+    if(n<160){ c.save(); c.translate(40+rnd(n)*190, 60+rnd(n+1)*320); c.rotate(-0.6); c.fillStyle="#5b4636"; c.fillRect(-2,-40,4,40); c.fillStyle="#c9a227"; c.fillRect(-3,-4,6,8); c.restore(); }
+  },
+  "99-do-zero"(c, t){
+    c.fillStyle="#15182a"; c.fillRect(0,0,W,H); c.strokeStyle="rgba(154,163,199,.5)"; c.setLineDash([6,6]); c.lineWidth=2; c.strokeRect(20,20,W-40,H-40); c.setLineDash([]);
+    const f=(t/LOOP)*3, k=Math.floor(f), u=ease((f-k)/0.6), r=60;
+    const forma=id=>{ const p=[]; for(let i=0;i<24;i++){ const a=i/24*Math.PI*2; let rr=r; if(id===1) rr=r/Math.max(Math.abs(Math.cos(a)),Math.abs(Math.sin(a)))*0.8; if(id===2) rr=r*(i%2?0.5:1.05); p.push([Math.cos(a)*rr,Math.sin(a)*rr]); } return p; };
+    const A=forma(k%3), B=forma((k+1)%3); c.fillStyle=["#34D5EF","#FF48B0","#FFB000"][k%3]; c.beginPath();
+    A.forEach(([x,y],i)=>{ const X=W/2+x+(B[i][0]-x)*u, Y=210+y+(B[i][1]-y)*u; i?c.lineTo(X,Y):c.moveTo(X,Y); }); c.closePath(); c.fill();
+    c.fillStyle="#eef1fb"; c.font="800 26px system-ui"; c.textAlign="center"; c.fillText("+ do zero", W/2, 350);
+    c.fillStyle="#9aa3c7"; c.font="13px system-ui"; c.fillText("descreva o que imagina", W/2, 376);
+  },
 };
 
 function roundRect(c,x,y,w,h,r){ c.beginPath(); c.moveTo(x+r,y); c.arcTo(x+w,y,x+w,y+h,r); c.arcTo(x+w,y+h,x,y+h,r); c.arcTo(x,y+h,x,y,r); c.arcTo(x,y,x+w,y,r); c.closePath(); }
@@ -188,16 +271,17 @@ if (P.titulo) {
 } else proj.innerHTML = `<div class="linha">Catálogo geral (nenhum projeto carregado).</div>`;
 
 const rec = new Set(P.recomendados || []);
-const grade = document.getElementById("grade"), canvases = [];
+const canvases = [];
 ESTILOS.forEach(e => {
+  const grade = document.getElementById("grade-" + (e.grupo || "casa"));
   const el = document.createElement("div"); el.className = "estilo" + (rec.has(e.id) ? " rec" : ""); el.dataset.id = e.id;
   el.innerHTML = `<canvas width="${W}" height="${H}"></canvas>
-    <div class="info"><div class="nome"><span>${e.n}</span>${e.nome}</div>
+    <div class="info"><div class="nome"><span>${e.n}</span>${e.nome}</div>${e.skill ? `<div class="skill">skill: ${e.skill}</div>` : ""}
     <div class="linha"><b>Movimento:</b> ${e.mov}</div><div class="linha"><b>Som:</b> ${e.som} · <b>${e.dif}</b></div>
     <div class="cores">${e.cores.map(h=>`<i style="background:${h}" title="${h}"></i>`).join("")}</div>
     <div class="bom">${e.bom}</div></div>`;
   el.onclick = () => { document.querySelectorAll(".estilo").forEach(x=>x.classList.remove("sel")); el.classList.add("sel");
-    document.getElementById("rodape").innerHTML = `Selecionado: <b>${e.n} · ${e.nome}</b> — diga no chat: “estilo ${e.n}” (e se a paleta é do estilo ou da marca).`; };
+    document.getElementById("rodape").innerHTML = e.grupo === "zero" ? `Selecionado: <b>criar do zero</b>. Diga no chat “estilo do zero” e descreva o que imagina (referências, cores, ritmo).` : `Selecionado: <b>${e.n} · ${e.nome}</b>. Diga no chat “estilo ${e.n}” e se a paleta é do estilo ou da marca.`; };
   grade.appendChild(el); canvases.push([el.querySelector("canvas").getContext("2d"), DESENHOS[e.id]]);
 });
 const t0 = performance.now();

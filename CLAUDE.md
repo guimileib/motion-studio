@@ -11,17 +11,17 @@ roteiro persuasivo → busca de mídia → narração (ElevenLabs) + legendas �
 | `roteiro-persuasivo` | Criar ou revisar roteiro, gancho, CTA, copy de vídeo | `projetos/<slug>/roteiro.json` + `roteiro.md` |
 | `busca-midia` | Achar fotos/vídeos de banco (Pexels, Pixabay, Unsplash, web) para cada cena | `projetos/<slug>/midia/` + `manifest.json` + `CREDITOS.md` |
 | `legendas-tts` | Narração na ElevenLabs, legendas SRT, legendas animadas estilo Reels | `projetos/<slug>/audio/`, `legendas/` |
-| `estilos-motion` | Escolher o estilo visual de cada vídeo (8 estilos) e conduzir storyboard → build → folha de contatos → render | `projetos/<slug>/estilo/escolha.html`, `roteiro.json → estilo` |
+| `estilos-motion` | Escolher o estilo visual de cada vídeo (casa, skills de estilo ou do zero) e os movimentos da motion-prompt, e conduzir storyboard → build → folha de contatos → render | `projetos/<slug>/estilo/escolha.html`, `roteiro.json → estilo` |
 | `transicoes-motion` | Escolher e implementar transições entre cenas | componentes em `remotion/src/transicoes/`, passos de CapCut, padrões para o Motion do Claude |
 
 Skills de terceiros (MIT, licença dentro de cada pasta; detalhes e dependências no `README.md`):
 `bang-motion` (motion HTML + GSAP), `vox-explainer` e `vox-director` (explainer estilo Vox via Atlas Cloud),
 `huashu-art-motion` (animação artística e explainer) e `claude-drawing` (pintura procedural em código).
-Elas não fazem parte do pipeline padrão: use quando o pedido combinar com elas, e ainda assim pergunte o estilo antes de montar.
+Elas entram no pipeline como opções de estilo na etapa 0 (página de estilos); também podem ser usadas direto quando o pedido combinar.
 
 ## O pipeline padrão
 
-0. **Estilo (obrigatório)** — quando o usuário passar um `.json` de roteiro (um vídeo ou uma série), **antes de montar cada projeto** abra a página de estilos e pergunte qual estilo usar e se a paleta é do estilo ou da marca: `python .claude/skills/estilos-motion/scripts/abrir_estilos.py --roteiro projetos/<slug>/roteiro.json` (ou `--serie <arquivo> --video <id>`). Numa série, pergunte vídeo a vídeo. Depois mostre o storyboard (mapa de batidas + 4 quadros) e espere aprovação.
+0. **Estilo + movimentos (obrigatório)** — quando o usuário passar um `.json` de roteiro (um vídeo ou uma série), **antes de montar cada projeto** abra a página de estilos e pergunte, numa só AskUserQuestion: (a) o estilo — da casa, de uma das skills de estilo (`bang-motion`, `vox-director`, `vox-explainer`, `huashu-art-motion`, `claude-drawing`) ou **criar do zero**; (b) os movimentos da `motion-prompt` — **o Claude escolhe** (`search` por cena) ou **abrir a galeria** (`pick`) para o usuário escolher; (c) se a paleta é do estilo ou da marca. Detalhes dos ramos em `.claude/skills/estilos-motion/SKILL.md`. Página: `python .claude/skills/estilos-motion/scripts/abrir_estilos.py --roteiro projetos/<slug>/roteiro.json` (ou `--serie <arquivo> --video <id>`). Numa série, pergunte vídeo a vídeo. Depois mostre o storyboard (mapa de batidas + 4 quadros) e espere aprovação.
 1. **Roteiro** — `roteiro-persuasivo` escreve `projetos/<slug>/roteiro.json` (o contrato entre as skills; esquema em `.claude/skills/roteiro-persuasivo/templates/roteiro.schema.json`).
 2. **Mídia** — `busca-midia` lê `cenas[].midia` e baixa as opções: `python .claude/skills/busca-midia/scripts/buscar_midia.py --roteiro projetos/<slug>/roteiro.json --baixar`.
 3. **Narração + legendas** — `legendas-tts`: `python .claude/skills/legendas-tts/scripts/tts_elevenlabs.py --roteiro projetos/<slug>/roteiro.json` (ou `tts_voicestudio.py` para voz local no VoiceStudio; confira a licença do motor antes de usar em peça comercial). Depois `ajustar_tempos.py --roteiro …` e de novo o TTS com `--so-legendas`, para as cenas durarem o tempo real da voz.

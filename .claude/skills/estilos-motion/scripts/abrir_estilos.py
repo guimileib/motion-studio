@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Gera e abre a página de escolha de estilo de motion de um projeto.
 
-A página mostra os 8 estilos animados com o título e o gancho do vídeo e marca 3 recomendados.
+A página mostra os estilos da casa, os estilos das skills de terceiros (bang-motion, vox-director,
+vox-explainer, huashu-art-motion, claude-drawing) e a opção "criar do zero", todos animados,
+com o título e o gancho do vídeo, e marca 3 recomendados.
 
 Uso:
   # projeto já convertido
@@ -37,6 +39,12 @@ AFINIDADES = {
     "05-riso-stop-motion": ["festa", "filho", "salao", "negocio local", "cliente", "momento", "cotidiano", "milkshake", "geleia"],
     "06-codice": ["mil novecentos", "1933", "1923", "psicologa", "harvard", "princeton", "estudo", "pesquisador", "historia"],
     "07-tinta-na-agua": ["memoria", "lembrar", "mente", "confia", "julgamento", "emocao", "percep", "cabeca"],
+    # estilos das skills de terceiros
+    "s-bang-motion": ["lancamento", "promo", "novidade", "chegou", "evento", "abertura", "intro", "app", "produto"],
+    "s-vox-director": ["por que", "explica", "entenda", "colagem", "tribute", "personalidade", "marca famosa", "anuncio"],
+    "s-vox-explainer": ["historia", "guerra", "economia", "noticia", "mil novecentos", "seculo", "pais", "documentario"],
+    "s-huashu-art-motion": ["arte", "pintura", "poesia", "cultura", "lenda", "mito", "natureza", "paisagem", "china", "japao"],
+    "s-claude-drawing": ["desenho", "ilustr", "aquarela", "infantil", "crianca", "receita", "flor", "planta", "animal", "bicho"],
 }
 
 
