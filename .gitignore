@@ -1,0 +1,25 @@
+.env
+.cache/
+__pycache__/
+*.pyc
+node_modules/
+.DS_Store
+remotion/out/
+
+# ---- projetos pessoais (nunca vão para o git) ----
+# roteiros, áudio, legendas, mídia e vídeos de cada projeto; só os exemplos são versionados
+projetos/*
+!projetos/exemplo-*/
+projetos/exemplo-*/midia/
+projetos/exemplo-*/audio/
+
+# composições Remotion de cada projeto (o Root.tsx as encontra sozinho)
+remotion/src/projetos/*
+!remotion/src/projetos/README.md
+
+# assets de projetos e marcas de clientes (logos, narração)
+remotion/public/*
+!remotion/public/fonts/
+
+# material de referência de terceiros (PDFs, tutoriais)
+*.pdf

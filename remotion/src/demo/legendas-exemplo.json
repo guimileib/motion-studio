@@ -1,0 +1,346 @@
+[
+ {
+  "text": "Cansado",
+  "startMs": 150,
+  "endMs": 650,
+  "timestampMs": 400,
+  "confidence": null
+ },
+ {
+  "text": " de",
+  "startMs": 721,
+  "endMs": 864,
+  "timestampMs": 792,
+  "confidence": null
+ },
+ {
+  "text": " adivinhar",
+  "startMs": 936,
+  "endMs": 1579,
+  "timestampMs": 1258,
+  "confidence": null
+ },
+ {
+  "text": " quanto",
+  "startMs": 1650,
+  "endMs": 2079,
+  "timestampMs": 1864,
+  "confidence": null
+ },
+ {
+  "text": " pedir",
+  "startMs": 2150,
+  "endMs": 2507,
+  "timestampMs": 2328,
+  "confidence": null
+ },
+ {
+  "text": " na",
+  "startMs": 2579,
+  "endMs": 2721,
+  "timestampMs": 2650,
+  "confidence": null
+ },
+ {
+  "text": " semana?",
+  "startMs": 2793,
+  "endMs": 3293,
+  "timestampMs": 3043,
+  "confidence": null,
+  "pageBreakAfter": true
+ },
+ {
+  "text": " E",
+  "startMs": 4150,
+  "endMs": 4221,
+  "timestampMs": 4186,
+  "confidence": null
+ },
+ {
+  "text": " quanto",
+  "startMs": 4293,
+  "endMs": 4721,
+  "timestampMs": 4507,
+  "confidence": null
+ },
+ {
+  "text": " a",
+  "startMs": 4793,
+  "endMs": 4864,
+  "timestampMs": 4828,
+  "confidence": null
+ },
+ {
+  "text": " mais",
+  "startMs": 4936,
+  "endMs": 5221,
+  "timestampMs": 5078,
+  "confidence": null
+ },
+ {
+  "text": " pedir",
+  "startMs": 5293,
+  "endMs": 5650,
+  "timestampMs": 5472,
+  "confidence": null
+ },
+ {
+  "text": " pra",
+  "startMs": 5721,
+  "endMs": 5936,
+  "timestampMs": 5828,
+  "confidence": null
+ },
+ {
+  "text": " não",
+  "startMs": 6007,
+  "endMs": 6221,
+  "timestampMs": 6114,
+  "confidence": null
+ },
+ {
+  "text": " ter",
+  "startMs": 6293,
+  "endMs": 6507,
+  "timestampMs": 6400,
+  "confidence": null
+ },
+ {
+  "text": " ruptura?",
+  "startMs": 6579,
+  "endMs": 7150,
+  "timestampMs": 6864,
+  "confidence": null,
+  "pageBreakAfter": true
+ },
+ {
+  "text": " A",
+  "startMs": 8650,
+  "endMs": 8721,
+  "timestampMs": 8686,
+  "confidence": null
+ },
+ {
+  "text": " Veta",
+  "startMs": 8793,
+  "endMs": 9079,
+  "timestampMs": 8936,
+  "confidence": null
+ },
+ {
+  "text": " te",
+  "startMs": 9150,
+  "endMs": 9293,
+  "timestampMs": 9222,
+  "confidence": null
+ },
+ {
+  "text": " diz.",
+  "startMs": 9364,
+  "endMs": 9650,
+  "timestampMs": 9507,
+  "confidence": null,
+  "pageBreakAfter": true
+ },
+ {
+  "text": " Pedido",
+  "startMs": 9721,
+  "endMs": 10150,
+  "timestampMs": 9936,
+  "confidence": null
+ },
+ {
+  "text": " calculado",
+  "startMs": 10221,
+  "endMs": 10864,
+  "timestampMs": 10542,
+  "confidence": null
+ },
+ {
+  "text": " pela",
+  "startMs": 10936,
+  "endMs": 11221,
+  "timestampMs": 11078,
+  "confidence": null
+ },
+ {
+  "text": " venda",
+  "startMs": 11293,
+  "endMs": 11650,
+  "timestampMs": 11472,
+  "confidence": null
+ },
+ {
+  "text": " real,",
+  "startMs": 11721,
+  "endMs": 12079,
+  "timestampMs": 11900,
+  "confidence": null
+ },
+ {
+  "text": " com",
+  "startMs": 12150,
+  "endMs": 12364,
+  "timestampMs": 12257,
+  "confidence": null
+ },
+ {
+  "text": " margem",
+  "startMs": 12436,
+  "endMs": 12864,
+  "timestampMs": 12650,
+  "confidence": null
+ },
+ {
+  "text": " contra",
+  "startMs": 12936,
+  "endMs": 13364,
+  "timestampMs": 13150,
+  "confidence": null
+ },
+ {
+  "text": " ruptura.",
+  "startMs": 13436,
+  "endMs": 14007,
+  "timestampMs": 13722,
+  "confidence": null,
+  "pageBreakAfter": true
+ },
+ {
+  "text": " Menos",
+  "startMs": 14079,
+  "endMs": 14436,
+  "timestampMs": 14258,
+  "confidence": null
+ },
+ {
+  "text": " falta",
+  "startMs": 14507,
+  "endMs": 14864,
+  "timestampMs": 14686,
+  "confidence": null
+ },
+ {
+  "text": " na",
+  "startMs": 14936,
+  "endMs": 15079,
+  "timestampMs": 15008,
+  "confidence": null
+ },
+ {
+  "text": " gôndola,",
+  "startMs": 15150,
+  "endMs": 15721,
+  "timestampMs": 15436,
+  "confidence": null
+ },
+ {
+  "text": " menos",
+  "startMs": 15793,
+  "endMs": 16150,
+  "timestampMs": 15972,
+  "confidence": null
+ },
+ {
+  "text": " perda",
+  "startMs": 16221,
+  "endMs": 16579,
+  "timestampMs": 16400,
+  "confidence": null
+ },
+ {
+  "text": " na",
+  "startMs": 16650,
+  "endMs": 16793,
+  "timestampMs": 16722,
+  "confidence": null
+ },
+ {
+  "text": " banca.",
+  "startMs": 16864,
+  "endMs": 17293,
+  "timestampMs": 17078,
+  "confidence": null,
+  "pageBreakAfter": true
+ },
+ {
+  "text": " O",
+  "startMs": 17200,
+  "endMs": 17271,
+  "timestampMs": 17236,
+  "confidence": null
+ },
+ {
+  "text": " segredo",
+  "startMs": 17343,
+  "endMs": 17843,
+  "timestampMs": 17593,
+  "confidence": null
+ },
+ {
+  "text": " não",
+  "startMs": 17914,
+  "endMs": 18129,
+  "timestampMs": 18022,
+  "confidence": null
+ },
+ {
+  "text": " é",
+  "startMs": 18200,
+  "endMs": 18271,
+  "timestampMs": 18236,
+  "confidence": null
+ },
+ {
+  "text": " comprar",
+  "startMs": 18343,
+  "endMs": 18843,
+  "timestampMs": 18593,
+  "confidence": null
+ },
+ {
+  "text": " pouco.",
+  "startMs": 18914,
+  "endMs": 19343,
+  "timestampMs": 19128,
+  "confidence": null,
+  "pageBreakAfter": true
+ },
+ {
+  "text": " É",
+  "startMs": 19414,
+  "endMs": 19486,
+  "timestampMs": 19450,
+  "confidence": null
+ },
+ {
+  "text": " comprar",
+  "startMs": 19557,
+  "endMs": 20057,
+  "timestampMs": 19807,
+  "confidence": null
+ },
+ {
+  "text": " certo.",
+  "startMs": 20129,
+  "endMs": 20557,
+  "timestampMs": 20343,
+  "confidence": null,
+  "pageBreakAfter": true
+ },
+ {
+  "text": " Veta",
+  "startMs": 20629,
+  "endMs": 20914,
+  "timestampMs": 20772,
+  "confidence": null
+ },
+ {
+  "text": " IA.",
+  "startMs": 20986,
+  "endMs": 21271,
+  "timestampMs": 21128,
+  "confidence": null,
+  "pageBreakAfter": true
+ }
+]

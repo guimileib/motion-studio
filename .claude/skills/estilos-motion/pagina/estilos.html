@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Escolha de estilo</title>
+<style>
+  :root { --bg:#0f1220; --card:#181c2e; --linha:#2a3050; --texto:#eef1fb; --suave:#9aa3c7; --acento:#34D5EF; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--texto); font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+  header { padding:28px 24px 8px; max-width:1240px; margin:0 auto; }
+  h1 { font-size:26px; margin:0 0 4px; }
+  .sub { color:var(--suave); margin:0 0 14px; }
+  .proj { background:var(--card); border:1px solid var(--linha); border-radius:14px; padding:14px 18px; display:grid; gap:4px; }
+  .proj b { color:var(--acento); font-weight:600; }
+  .proj .gancho { font-size:17px; }
+  main { max-width:1240px; margin:0 auto; padding:16px 24px 48px; display:grid; grid-template-columns:repeat(auto-fill,minmax(270px,1fr)); gap:18px; }
+  .estilo { background:var(--card); border:2px solid var(--linha); border-radius:16px; overflow:hidden; cursor:pointer; transition:border-color .15s, transform .15s; position:relative; }
+  .estilo:hover { transform:translateY(-2px); }
+  .estilo.sel { border-color:var(--acento); box-shadow:0 0 0 3px rgba(52,213,239,.25); }
+  .estilo.rec::before { content:"recomendado"; position:absolute; top:10px; left:10px; z-index:2; background:var(--acento); color:#0f1220; font-weight:700; font-size:12px; padding:3px 9px; border-radius:99px; }
+  canvas { display:block; width:100%; aspect-ratio:9/16; background:#000; }
+  .info { padding:12px 14px 14px; display:grid; gap:6px; }
+  .nome { font-size:18px; font-weight:700; }
+  .nome span { color:var(--suave); font-weight:500; margin-right:6px; }
+  .linha { color:var(--suave); font-size:13.5px; }
+  .linha b { color:var(--texto); font-weight:600; }
+  .cores { display:flex; gap:6px; }
+  .cores i { width:20px; height:20px; border-radius:6px; border:1px solid rgba(255,255,255,.2); }
+  .bom { font-size:13px; color:#cfe9f3; }
+  footer { position:sticky; bottom:0; background:rgba(15,18,32,.95); border-top:1px solid var(--linha); padding:14px 24px; text-align:center; font-size:16px; }
+  footer b { color:var(--acento); }
+  @media (max-width:600px){ main{ padding:12px 16px 40px; } header{ padding:20px 16px 4px; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>Qual estilo de motion para este vídeo?</h1>
+  <p class="sub">Toque num estilo para ver o nome; depois responda no chat do Claude Code.</p>
+  <div class="proj" id="proj"></div>
+</header>
+<main id="grade"></main>
+<footer id="rodape">Nenhum estilo selecionado.</footer>
+
+<script>
+window.PROJETO = /*PROJETO*/null;
+
+const ESTILOS = [
+  {id:"00-flat-marca", n:"00", nome:"Flat da marca", mov:"Entradas em bloco, molas curtas", som:"Narração (trilha leve opcional)", dif:"Fácil", cores:["#1D2744","#34D5EF","#46A1CD","#FFFFFF"], bom:"Padrão seguro de marca; qualquer tema."},
+  {id:"01-linha-continua", n:"01", nome:"Linha contínua", mov:"Contínuo, a caneta nunca levanta", som:"Marimba, risco de caneta", dif:"Média", cores:["#F4F1EA","#DAD5CA","#2F5BFF"], bom:"Dados, crescimento, raciocínio passo a passo."},
+  {id:"02-bola-unica", n:"02", nome:"Bola única", mov:"Estalos secos, pausas curtas", som:"Eletrônico 128 BPM", dif:"Fácil", cores:["#111116","#EFEBE4","#FF3319","#2A42FF"], bom:"Destaque, \"o diferente\", um elemento só."},
+  {id:"05-riso-stop-motion", n:"05", nome:"Risografia stop motion", mov:"Stop motion em três, com tremor", som:"Piano de brinquedo, papel", dif:"Média", cores:["#F3EFE6","#FF48B0","#00838A"], bom:"Pequeno negócio, cotidiano, tom humano."},
+  {id:"06-codice", n:"06", nome:"Códice renascentista", mov:"Ritmo de mão, um voo rápido", som:"Alaúde, pena arranhando", dif:"Difícil", cores:["#E9D9B5","#5A3A1E","#A4452C"], bom:"Estudos, história, autoridade."},
+  {id:"07-tinta-na-agua", n:"07", nome:"Tinta na água", mov:"Câmera lenta, orgânico", som:"Piano ambiente, sem bateria", dif:"Difícil", cores:["#FAFAFA","#1B1F6B","#C2185B"], bom:"Memória, percepção, emoção."},
+];
+
+// ---------------------------------------------------------------- utilitários
+const W = 270, H = 480, LOOP = 4;
+function rnd(s){ let x = Math.sin(s*127.1)*43758.5453; return x - Math.floor(x); }
+const ease = x => 1 - Math.pow(1 - Math.min(1, Math.max(0, x)), 3);
+
+// ---------------------------------------------------------------- desenhos (função pura de t)
+const DESENHOS = {
+  "00-flat-marca"(c, t){
+    const g = c.createRadialGradient(W/2, 0, 10, W/2, 0, H*0.8); g.addColorStop(0,"#0A248B"); g.addColorStop(1,"#1D2744");
+    c.fillStyle = g; c.fillRect(0,0,W,H);
+    for (let i=0;i<14;i++){ c.fillStyle = i%4 ? "rgba(169,203,230,.25)" : "rgba(52,213,239,.35)"; c.beginPath(); c.arc(rnd(i)*W, (rnd(i+9)*H - t*20*(1+rnd(i+3))+H)%H, 1.5+rnd(i+5)*2, 0, 7); c.fill(); }
+    const pal = ["MESA","CADEIRA","ESQUILO","SOFÁ"];
+    pal.forEach((p,i)=>{ const e = ease((t - 0.3 - i*0.45)/0.35), dif = i===2; if (e<=0) return;
+      c.globalAlpha = e * (t>2.4 && !dif ? 0.3 : 1); const y = 90 + i*62 + (1-e)*14, s = dif && t>2.4 ? 1.08 : 1;
+      c.save(); c.translate(W/2, y+24); c.scale(s,s); c.fillStyle = dif ? "#34D5EF" : "#26335A"; roundRect(c,-90,-24,180,48,8); c.fill();
+      c.fillStyle = dif ? "#1D2744" : "#A9CBE6"; c.font = "bold 26px 'Arial Narrow', Impact, sans-serif"; c.textAlign="center"; c.textBaseline="middle"; c.fillText(p,0,2); c.restore(); });
+    c.globalAlpha = 1;
+    c.fillStyle = "#fff"; c.font = "800 15px system-ui"; c.textAlign = "center"; c.fillText("qual você vai", W/2, 400); c.fillStyle="#34D5EF"; c.fillText("lembrar amanhã?", W/2, 420);
+  },
+  "01-linha-continua"(c, t){
+    c.fillStyle="#F4F1EA"; c.fillRect(0,0,W,H); c.strokeStyle="#DAD5CA"; c.lineWidth=1;
+    for(let x=0;x<W;x+=18){c.beginPath();c.moveTo(x,0);c.lineTo(x,H);c.stroke();} for(let y=0;y<H;y+=18){c.beginPath();c.moveTo(0,y);c.lineTo(W,y);c.stroke();}
+    const pts=[]; for(let i=0;i<=60;i++){ const u=i/60; pts.push([30+u*210, 330 - u*170 - Math.sin(u*14)*18*(1-u)]); }
+    for(let i=0;i<=80;i++){ const a=i/80*Math.PI*2*1.15; pts.push([W/2+Math.cos(a-1.2)*70*(1-i/400), 170+Math.sin(a-1.2)*70]); }
+    for(let i=0;i<=60;i++){ const u=i/60; pts.push([60+u*150, 300+Math.sin(u*Math.PI*6)*24*Math.sin(u*Math.PI)]); }
+    const n = Math.floor(ease(t/3.4)*(pts.length-1));
+    c.strokeStyle="#2F5BFF"; c.lineWidth=4; c.lineCap="round"; c.lineJoin="round"; c.beginPath();
+    for(let i=0;i<=n;i++){ const [x,y]=pts[i]; const w=Math.sin(i*1.7)*0.6; i?c.lineTo(x+w,y):c.moveTo(x,y);} c.stroke();
+    const [px,py]=pts[n]; c.fillStyle="rgba(47,91,255,.25)"; c.beginPath(); c.arc(px,py,9,0,7); c.fill(); c.fillStyle="#2F5BFF"; c.beginPath(); c.arc(px,py,4,0,7); c.fill();
+  },
+  "02-bola-unica"(c, t){
+    const fase = Math.floor(t/1.0);
+    const fundos = ["#111116","#FF3319","#EFEBE4","#2A42FF"]; c.fillStyle=fundos[fase]; c.fillRect(0,0,W,H);
+    const tt = t - fase;
+    c.strokeStyle = fase===0 ? "#EFEBE4" : "rgba(17,17,22,.3)"; c.lineWidth=2;
+    [[14,14,1,0],[W-14,14,-1,0],[14,H-14,1,-1],[W-14,H-14,-1,-1]].forEach(([x,y,sx,sy])=>{ c.beginPath(); c.moveTo(x, y+(sy?-12:12)); c.lineTo(x,y); c.lineTo(x+sx*12,y); c.stroke(); });
+    c.fillStyle = fase===0 ? "#EFEBE4" : "#111116"; c.font="11px monospace"; c.textAlign="right"; c.fillText(`0${fase+1} / 04`, W-22, 34);
+    let x=W/2, y=300, sx=1, sy=1, r=22;
+    if (fase===0){ const b=Math.abs(Math.sin(tt*Math.PI*3)); y = 360 - b*150; const imp = b<0.12 ? 1-b/0.12 : 0; sx=1+imp*0.35; sy=1-imp*0.3; c.fillStyle="#EFEBE4"; c.fillRect(30,384,W-60,2); }
+    if (fase===1){ c.fillStyle="#111116"; c.font="bold 54px Impact, sans-serif"; c.textAlign="center"; const k=Math.min(6,Math.floor(tt*12)); c.fillText("DESTAQUE".slice(0,k+2), W/2, 200); y=300; }
+    if (fase===2){ for(let i=0;i<24;i++){ const a=i/24*7+tt*3; c.fillStyle="#111116"; c.beginPath(); c.arc(W/2+Math.cos(a)*70, 260+Math.sin(a)*70*Math.cos(tt*2), 3,0,7); c.fill(); } y=260; }
+    if (fase===3){ for(let i=0;i<5;i++){ const rr=((tt*1.5+i/5)%1)*200; c.strokeStyle="rgba(239,235,228,.6)"; c.lineWidth=3; c.beginPath(); c.arc(W/2,260,rr,0,7); c.stroke(); } y=260; }
+    c.fillStyle="#FF3319"; if (fase===1) c.fillStyle="#111116";
+    c.save(); c.translate(x,y+r); c.scale(sx,sy); c.beginPath(); c.arc(0,-r,r,0,7); c.fill(); c.restore();
+  },
+  "03-terminal-ascii"(c, t){
+    c.fillStyle="#000"; c.fillRect(0,0,W,H);
+    const cols=46, rows=60, cw=W/cols, ch=H/rows; const chars=" .:-=+*#%@";
+    const A=t*1.1, B=t*0.6, buf=new Float32Array(cols*rows), z=new Float32Array(cols*rows);
+    for(let th=0;th<6.28;th+=0.09) for(let ph=0;ph<6.28;ph+=0.03){
+      const ct=Math.cos(th),st=Math.sin(th),cp=Math.cos(ph),sp=Math.sin(ph),sA=Math.sin(A),cA=Math.cos(A),sB=Math.sin(B),cB=Math.cos(B);
+      const h=ct+2, D=1/(sp*h*sA+st*cA+5), tq=sp*h*cA-st*sA;
+      const x=Math.floor(cols/2+cols*0.45*D*(cp*h*cB-tq*sB)*1.35), y=Math.floor(rows*0.42+rows*0.3*D*(cp*h*sB+tq*cB)*1.35);
+      const L=(st*sA-sp*ct*cA)*cB-sp*ct*sA-st*cA-cp*ct*sB; const o=x+cols*y;
+      if(y>=0&&y<rows&&x>=0&&x<cols&&D>z[o]){ z[o]=D; buf[o]=Math.max(0,L); } }
+    c.font=`${ch*1.1}px monospace`; c.textBaseline="top";
+    for(let i=0;i<buf.length;i++){ if(!z[i]) continue; const k=Math.min(9,Math.floor(buf[i]*7)); c.fillStyle=k>7?"#c8ffd6":"#33FF66"; c.fillText(chars[Math.max(1,k)], (i%cols)*cw, Math.floor(i/cols)*ch); }
+    c.fillStyle="#33FF66"; c.font="13px monospace"; const s="$ claude render --gancho"; c.fillText(s.slice(0, Math.floor(t*10)) + (Math.floor(t*3)%2?"█":""), 14, 400);
+    c.fillStyle="rgba(0,0,0,.18)"; for(let y=0;y<H;y+=3) c.fillRect(0,y,W,1);
+  },
+  "04-pixel-dither"(c, t){
+    const gb=["#0F380F","#306230","#8BAC0F","#9BBC0F"], pw=54, ph=96, s=W/pw;
+    const bayer=[[0,8,2,10],[12,4,14,6],[3,11,1,9],[15,7,13,5]];
+    const tq = Math.floor(t*12)/12;
+    const bx = 12 + ((tq*14)%(pw-24)), by = 58 - Math.abs(Math.sin(tq*Math.PI*1.6))*30, R=6;
+    for(let y=0;y<ph;y++) for(let x=0;x<pw;x++){
+      let v = y>66 ? 0.3 + 0.1*Math.sin((x+tq*20)*0.4) : 1 - y/ph*0.35;
+      if (y>60 && y<=66 && Math.sin((x+tq*8)*0.25)*3+63 < y) v = 0.4;
+      const dx=x-bx, dy=y-by, d=Math.hypot(dx,dy); if(d<R) v = 0.12 + (dx+dy < -3 ? 0.4 : 0) - d/(R*8);
+      const lvl = Math.min(3, Math.max(0, Math.floor(v*3 + bayer[y%4][x%4]/16)));
+      c.fillStyle = gb[lvl]; c.fillRect(x*s, y*s, s+0.5, s+0.5);
+    }
+    c.fillStyle=gb[0]; c.font=`bold ${s*5}px monospace`; c.textAlign="center"; if (Math.floor(t*2)%2) c.fillText("PRESS START", W/2, 30*s);
+    c.fillStyle="rgba(15,56,15,.12)"; for(let y=0;y<H;y+=s) c.fillRect(0,y,W,1);
+  },
+  "05-riso-stop-motion"(c, t){
+    const tq=Math.floor(t*8)/8;
+    c.fillStyle="#F3EFE6"; c.fillRect(0,0,W,H);
+    for(let i=0;i<220;i++){ c.fillStyle=`rgba(120,100,80,${0.05+rnd(i)*0.06})`; c.fillRect(rnd(i+1)*W, rnd(i+2)*H, 1+rnd(i+3)*6, 1); }
+    const forma=(cor,dx,dy,fn)=>{ c.save(); c.translate(dx,dy); c.fillStyle="rgba(0,0,0,.12)"; c.save(); c.translate(3,4); fn(); c.restore(); c.fillStyle=cor; c.globalAlpha=.92; fn(); c.restore(); };
+    const j=(k)=> (rnd(Math.floor(t*8)+k)-0.5)*3;
+    const e1=ease((tq-0.2)/0.6), e2=ease((tq-0.8)/0.6), e3=ease((tq-1.4)/0.6), e4=ease((tq-2.0)/0.5);
+    forma("#00838A", -160+e1*270+j(1), 120+j(2), ()=>{ c.beginPath(); c.arc(0,0,48,0,7); c.fill(); });
+    forma("#FF48B0", W+120-e2*290+j(3), 230+j(4), ()=>{ c.beginPath(); c.moveTo(-50,30); for(let i=0;i<6;i++) c.lineTo(-50+i*20, i%2?-20:30); c.lineTo(50,40); c.lineTo(-50,40); c.fill(); });
+    forma("#FF48B0", 80+j(5), H+80-e3*330, ()=>{ star(c,0,0,5,44,20); c.fill(); });
+    forma("#00838A", 190+j(7), -80+e4*420, ()=>{ roundRect(c,-40,-30,80,60,6); c.fill(); });
+    c.globalCompositeOperation="multiply"; c.fillStyle="rgba(255,72,176,.5)"; c.beginPath(); c.arc(110+3+j(9)*0,120,48*e1,0,7); c.fill(); c.globalCompositeOperation="source-over";
+  },
+  "06-codice"(c, t){
+    const g=c.createRadialGradient(W/2,H/2,60,W/2,H/2,H*0.7); g.addColorStop(0,"#EFE2C2"); g.addColorStop(1,"#CDB688");
+    c.fillStyle=g; c.fillRect(0,0,W,H);
+    for(let i=0;i<14;i++){ c.fillStyle=`rgba(120,80,30,${0.04+rnd(i)*0.05})`; c.beginPath(); c.arc(rnd(i+4)*W, rnd(i+8)*H, 6+rnd(i)*24,0,7); c.fill(); }
+    const p1=ease(t/1.0), p2=ease((t-0.9)/1.3), p3=ease((t-2.2)/1.2);
+    c.strokeStyle="#A4452C"; c.lineWidth=1.2; c.globalAlpha=.8;
+    c.beginPath(); c.arc(W/2,220,90,-Math.PI/2,-Math.PI/2+p1*Math.PI*2); c.stroke();
+    c.strokeRect(W/2-90, 130, 180*p1, 180*p1); c.globalAlpha=1;
+    c.strokeStyle="#5A3A1E"; c.lineWidth=2; c.lineCap="round";
+    c.beginPath(); const wing=(dir)=>{ for(let i=0;i<=20*p2;i++){ const u=i/20; const x=W/2+dir*u*85, y=220-Math.sin(u*Math.PI)*55+u*20; i?c.lineTo(x,y):c.moveTo(W/2,220);} }; wing(1); c.stroke(); c.beginPath(); wing(-1); c.stroke();
+    c.beginPath(); c.arc(W/2,225,16*p2,0,7); c.stroke();
+    c.lineWidth=0.8; for(let i=0;i<Math.floor(p3*16);i++){ c.beginPath(); c.moveTo(W/2-60+i*7,250); c.lineTo(W/2-50+i*7,236); c.stroke(); }
+    c.fillStyle="#5A3A1E"; c.font="italic 13px Georgia, serif"; c.globalAlpha=p3;
+    c.save(); c.scale(-1,1); c.fillText("ꝺella machina volante", -W+30, 360); c.fillText("ꝓportione ꝺel moto", -W+40, 380); c.restore(); c.globalAlpha=1;
+  },
+  "07-tinta-na-agua"(c, t){
+    c.fillStyle="#FAFAFA"; c.fillRect(0,0,W,H);
+    c.globalCompositeOperation="multiply";
+    const n=900;
+    for(let i=0;i<n;i++){
+      const cor = i%3===0 ? "rgba(194,24,91,.10)" : "rgba(27,31,107,.10)";
+      const a=rnd(i)*Math.PI*2, r0=rnd(i+1), dt=Math.max(0, t - (i%3===0?1.2:0.2));
+      const bloom = 1 - Math.exp(-dt*0.9);
+      let x = W/2 + Math.cos(a)*r0*90*bloom + Math.sin(dt*0.8 + r0*6)*22*bloom;
+      let y = 70 + bloom*190 + Math.sin(a)*r0*70*bloom - Math.cos(dt*0.6 + a)*30*bloom*r0;
+      c.fillStyle=cor; c.beginPath(); c.arc(x,y,3+bloom*5,0,7); c.fill();
+    }
+    c.globalCompositeOperation="source-over";
+    c.strokeStyle="rgba(27,31,107,.15)"; c.beginPath(); c.moveTo(0,52); c.lineTo(W,52); c.stroke();
+  },
+};
+
+function roundRect(c,x,y,w,h,r){ c.beginPath(); c.moveTo(x+r,y); c.arcTo(x+w,y,x+w,y+h,r); c.arcTo(x+w,y+h,x,y+h,r); c.arcTo(x,y+h,x,y,r); c.arcTo(x,y,x+w,y,r); c.closePath(); }
+function star(c,x,y,p,r1,r2){ c.beginPath(); for(let i=0;i<p*2;i++){ const r=i%2?r2:r1, a=i*Math.PI/p-Math.PI/2; c.lineTo(x+Math.cos(a)*r, y+Math.sin(a)*r);} c.closePath(); }
+
+// ---------------------------------------------------------------- página
+const P = window.PROJETO || {};
+const proj = document.getElementById("proj");
+if (P.titulo) {
+  proj.innerHTML = `<div><b>${P.id ? P.id + " · " : ""}Projeto:</b> ${P.titulo}</div>`
+    + (P.gancho ? `<div class="gancho">“${P.gancho}”</div>` : "")
+    + (P.ideia ? `<div class="linha">${P.ideia}</div>` : "")
+    + (P.marca ? `<div class="linha">Paleta da marca disponível: ${P.marca}</div>` : "");
+} else proj.innerHTML = `<div class="linha">Catálogo geral (nenhum projeto carregado).</div>`;
+
+const rec = new Set(P.recomendados || []);
+const grade = document.getElementById("grade"), canvases = [];
+ESTILOS.forEach(e => {
+  const el = document.createElement("div"); el.className = "estilo" + (rec.has(e.id) ? " rec" : ""); el.dataset.id = e.id;
+  el.innerHTML = `<canvas width="${W}" height="${H}"></canvas>
+    <div class="info"><div class="nome"><span>${e.n}</span>${e.nome}</div>
+    <div class="linha"><b>Movimento:</b> ${e.mov}</div><div class="linha"><b>Som:</b> ${e.som} · <b>${e.dif}</b></div>
+    <div class="cores">${e.cores.map(h=>`<i style="background:${h}" title="${h}"></i>`).join("")}</div>
+    <div class="bom">${e.bom}</div></div>`;
+  el.onclick = () => { document.querySelectorAll(".estilo").forEach(x=>x.classList.remove("sel")); el.classList.add("sel");
+    document.getElementById("rodape").innerHTML = `Selecionado: <b>${e.n} · ${e.nome}</b> — diga no chat: “estilo ${e.n}” (e se a paleta é do estilo ou da marca).`; };
+  grade.appendChild(el); canvases.push([el.querySelector("canvas").getContext("2d"), DESENHOS[e.id]]);
+});
+const t0 = performance.now();
+(function quadro(){ const t = ((performance.now()-t0)/1000) % LOOP; canvases.forEach(([c,f]) => { c.save(); f(c,t); c.restore(); }); requestAnimationFrame(quadro); })();
+</script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "roteiro.json — contrato entre as skills do motion-studio",
+  "type": "object",
+  "required": ["titulo", "formato", "duracao_alvo_s", "cenas"],
+  "properties": {
+    "titulo": { "type": "string" },
+    "slug": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "objetivo": { "enum": ["alcance", "autoridade", "relacionamento", "lead", "venda", "agendamento"] },
+    "publico": { "type": "string", "description": "Quem compra, dor, desejo, objeção" },
+    "nivel_consciencia": { "enum": ["inconsciente", "problema", "solucao", "produto", "total"] },
+    "estrutura": { "type": "string", "description": "PAS, AIDA, BAB, PASTOR, GRR, mito-verdade, demonstracao" },
+    "promessa": { "type": "string" },
+    "ganchos_alternativos": { "type": "array", "items": { "type": "string" } },
+    "formato": {
+      "type": "object",
+      "required": ["largura", "altura", "fps"],
+      "properties": {
+        "largura": { "type": "integer", "default": 1080 },
+        "altura": { "type": "integer", "default": 1920 },
+        "fps": { "enum": [24, 25, 30, 60], "default": 30 },
+        "plataforma": { "type": "string" }
+      }
+    },
+    "duracao_alvo_s": { "type": "number" },
+    "voz": {
+      "type": "object",
+      "properties": {
+        "voice_id": { "type": "string", "description": "Vazio = usa ELEVENLABS_VOICE_ID do .env" },
+        "modelo": { "type": "string", "default": "eleven_multilingual_v2" },
+        "velocidade": { "type": "number", "minimum": 0.7, "maximum": 1.2, "default": 1.0 },
+        "estabilidade": { "type": "number", "default": 0.45 },
+        "similaridade": { "type": "number", "default": 0.75 },
+        "estilo": { "type": "number", "default": 0.2 },
+        "voicestudio": {
+          "type": "object",
+          "description": "Só para tts_voicestudio.py. Vazio = usa VOICESTUDIO_MODEL e VOICESTUDIO_VOICE do .env",
+          "properties": {
+            "modelo": { "type": "string", "description": "Motor do VoiceStudio: voxcpm2, moss-tts-nano… (omnivoice é só uso não comercial)" },
+            "voz": { "type": "string", "description": "Nome ou id do perfil de voz no VoiceStudio" },
+            "idioma": { "type": "string", "default": "pt-BR" },
+            "instrucoes": { "type": "string", "description": "Instrução de estilo para o motor (ex.: tom animado, ritmo de anúncio)" },
+            "seed": { "type": "integer", "description": "Fixa a voz entre as cenas" }
+          }
+        }
+      }
+    },
+    "legenda_estilo": { "enum": ["reels", "padrao"], "default": "reels" },
+    "cenas": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "duracao_s"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{0,31}$" },
+          "nome": { "type": "string" },
+          "inicio_s": { "type": "number", "description": "Opcional: calculado pela soma das cenas anteriores" },
+          "duracao_s": { "type": "number", "exclusiveMinimum": 0 },
+          "objetivo": { "type": "string", "description": "Trabalho da cena: gancho, agitação, prova, CTA…" },
+          "narracao": { "type": "string", "description": "Texto como deve aparecer na legenda" },
+          "narracao_tts": { "type": "string", "description": "Opcional: grafia para a voz (siglas, números, preços por extenso)" },
+          "narracao_inicio_s": { "type": "number", "description": "Opcional: atraso da fala dentro da cena (padrão 0,15)" },
+          "texto_tela": { "type": "string" },
+          "visual": { "type": "string" },
+          "midia": {
+            "type": "object",
+            "properties": {
+              "tipo": { "enum": ["video", "foto", "nenhuma", "propria"] },
+              "busca": { "type": "array", "items": { "type": "string" } },
+              "orientacao": { "enum": ["vertical", "horizontal", "quadrado"] },
+              "fontes": { "type": "array", "items": { "enum": ["pexels", "pixabay", "unsplash", "web"] } },
+              "notas": { "type": "string", "description": "Movimento, cor, enquadramento desejados" }
+            }
+          },
+          "transicao_saida": {
+            "type": "object",
+            "properties": {
+              "tipo": {
+                "enum": ["corte", "j-cut", "l-cut", "match-cut", "whip-pan", "zoom-punch", "zoom-through",
+                         "dissolve", "dip-cor", "push", "wipe", "object-wipe", "iris", "shape-morph",
+                         "luma-wipe", "faixas", "texto-empurra", "desfoque", "glitch"]
+              },
+              "duracao_s": { "type": "number" },
+              "direcao": { "type": "string" },
+              "som": { "type": "string", "description": "whoosh, pop, swoosh-reverso, impacto, nenhum" },
+              "notas": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "cta": { "type": "string" },
+    "legenda_post": { "type": "string" },
+    "hashtags": { "type": "array", "items": { "type": "string" } }
+  }
+}
